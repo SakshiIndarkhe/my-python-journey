@@ -1,24 +1,55 @@
 #File handling with Exception handling
 
-#open file and rread it and also use exception handling
-#i will complete it afterwards
-import csv
-f=open("data.csv" ,"r")
-if (f==0):
-    print("No file found")
+#open file and read it and also use exception handling
 
-field=[]
+import csv
+
+fields=[]
 rows=[]
 
+filename="data.csv"
+try:
+    with open(filename,"r")as csvfile:
+        csvreader=csv.reader(csvfile)
 
-csvreader=csv.reader(f)
+        fields=next(csvreader)
 
-field=next(csvreader)
+        for row in csvreader:
+            rows.append(row)
+except FileNotFoundError:
+    print("File does not exist")
 
-for row in csvreader:
-    rows.append(row)
+except Exception as e:
+    print("Error")
 
-print(field)
-print(rows)
+total_marks=0
+number=0
 
-f.close()
+for row in rows:
+    total_marks+=int(row[1])
+    number+=1
+notes=[]
+for row in rows:
+    if (row[2]=="A"):
+        notes.append("Good")
+    elif(row[2]=="B"):
+        notes.append("Not Bad")
+    elif(row[2]=="C"): 
+        notes.append("Study hard") 
+
+avg_marks=total_marks//number
+
+
+#writing data
+try:
+    with open("result.txt", "w",newline='') as csvfile:
+        csvwriter=csv.writer(csvfile)#To write into scv file
+
+        csvwriter.writerow(["Average","total marks","Note"])
+        csvwriter.writerow([avg_marks,total_marks,notes])
+
+
+except Exception as ep:
+    print("Result file not created")
+
+#Not a perfect code , but it's okay 
